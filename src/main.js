@@ -1,22 +1,35 @@
-// Code Practice: RNGolf
-// Name: Alexander Halim
-// Date:2/2/2024
-
 "use strict";
+
+const WIDTH = 800;
+const HEIGHT = 700;
+
+const SHARED_CONFIG = {
+  width: WIDTH,
+  height: HEIGHT,
+};
+
+const Scenes = [PreloadScene, PlayScene];
+
+const createScene = (Scene) => new Scene(SHARED_CONFIG);
+// iterates over all the scenes, and creating a new instance of that scene with SHARED_CONFIG
+const initScenes = () => Scenes.map(createScene);
 
 let config = {
   type: Phaser.AUTO,
-  width: 640,
-  height: 960,
+  ...SHARED_CONFIG,
+  render: {
+    pixelArt: true,
+  },
   physics: {
     default: "arcade",
     arcade: {
       debug: true,
     },
   },
-  scene: [Play],
+  scene: initScenes(),
 };
 
 let game = new Phaser.Game(config);
 
-let { width, height } = game.config;
+let cursors;
+let { height, width } = game.config;
