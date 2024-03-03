@@ -2,19 +2,18 @@ class PlayScene extends BaseScene {
   constructor(config) {
     super("PlayScene", config);
 
-    this.puppy = null;
     this.score = 0;
-
-    this.currentState = "default";
-    this.sentence = "example sentence test test";
     this.sentenceProgress = 0;
-    this.hearts = [];
-    this.maxHearts = 5;
-
-    this.tickleTime = [];
+    this.currentRound = null;
+    this.currentRoundIndex = 0;
   }
 
-  init() {}
+  init() {
+    this.puppy = null;
+    this.hearts = [];
+    this.maxHearts = 5;
+    this.currentState = "default";
+  }
 
   preload() {
     this.load.atlas(
@@ -29,6 +28,7 @@ class PlayScene extends BaseScene {
   }
 
   create() {
+    // Background + other scene setups
     this.background = this.add
       .tileSprite(0, 0, this.config.width, this.config.height, "background")
       .setOrigin(0, 0);
@@ -68,6 +68,24 @@ class PlayScene extends BaseScene {
     this.time.delayedCall(1000, movePuppy);
 
     this.input.keyboard.on("keydown", this.handleKeyInput, this);
+
+    this.rounds = [
+      new Round(
+        "first sentence",
+        30000,
+        this.completeRound.bind(this),
+        this.failRound.bind(this)
+      ),
+
+      new Round(
+        "second sentence",
+        30000,
+        this.completeRound.bind(this),
+        this.failRound.bind(this)
+      ),
+    ];
+
+    this.startNextRound();
   }
 
   update() {
@@ -81,6 +99,7 @@ class PlayScene extends BaseScene {
   }
 
   loseHeart() {
+    console.log("Losing a heart!");
     // Remove a heart from the screen
     if (this.hearts.length > 0) {
       let heart = this.hearts.pop();
@@ -107,15 +126,49 @@ class PlayScene extends BaseScene {
   }
 
   handleKeyInput(event) {
-    if (event.key === this.sentence[this.sentenceProgress]) {
-      this.sentenceProgress++;
-      this.tickPuppy();
-      if (this.sentenceProgress >= this.sentence.length) {
-        console.log("Sentence completed!");
-        // Proceed to next round here
+    if (this.currentRound) {
+      const currentSentence = this.currentRound.sentence;
+
+      // Check if the pressed key matches the current character in the sentence
+      if (event.key === currentSentence[this.sentenceProgress]) {
+        this.sentenceProgress++;
+        this.tickPuppy();
+
+        // If the entire sentence has been correctly typed
+        if (this.sentenceProgress >= currentSentence.length) {
+          console.log("Sentence completed.");
+          this.completeRound();
+          // **Reset for the next sentence
+          this.sentenceProgress = 0;
+        }
+      } else {
+        this.loseHeart();
       }
-    } else {
-      this.loseHeart();
     }
+  }
+  startNextRound() {
+    if (this.currentRoundIndex < this.rounds.length) {
+      console.log("Round starting.");
+      this.currentRound = this.rounds[this.currentRoundIndex];
+      this.currentRound.start();
+      this.sentence = this.currentRound.sentence;
+      this.currentRoundIndex++;
+    } else {
+      console.log("All rounds finished.");
+    }
+  }
+  completeRound() {
+    console.log("Completed round.");
+    this.fillHeart();
+    this.startNextRound();
+  }
+
+  failRound() {
+    console.log("Failed round.");
+  }
+
+  // todo
+  fillHeart() {
+    console.log("Filling heart!");
   }
 }
