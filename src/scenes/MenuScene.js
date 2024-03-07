@@ -23,6 +23,11 @@ class MenuScene extends BaseScene {
 
     super.create();
     this.createMenu(this.menu, this.setUpMenuEvents.bind(this)); // second argument will bind the correct "this" context
+
+    const startMenuItem = this.menu.find((item) => item.text === "Start");
+    if (startMenuItem && startMenuItem.textObj) {
+      this.makeTextBlink(startMenuItem.textObj);
+    }
   }
 
   setUpMenuEvents(menuItem) {
@@ -51,6 +56,16 @@ class MenuScene extends BaseScene {
       if (menuItem === "Exit") {
         this.game.destroy(true);
       }
+    });
+  }
+
+  makeTextBlink(textObj) {
+    this.time.addEvent({
+      delay: 500,
+      callback: () => {
+        textObj.visible = !textObj.visible;
+      },
+      loop: true,
     });
   }
 }
