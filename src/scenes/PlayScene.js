@@ -9,6 +9,7 @@ class PlayScene extends BaseScene {
     this.sentenceText = null;
 
     this.isClickerMoving = false;
+    this.barkPlayed = false;
   }
 
   init() {
@@ -29,6 +30,9 @@ class PlayScene extends BaseScene {
     this.load.image("clicker", "assets/clicker.png");
     this.load.image("heart", "assets/unfilledheart.png");
     this.load.image("filledHeart", "assets/filledheart.png");
+
+    this.load.audio("ouch", "assets/ouch.mp3");
+    this.load.audio("bark", "assets/bark.mp3");
   }
 
   create() {
@@ -117,6 +121,7 @@ class PlayScene extends BaseScene {
   loseHeart() {
     console.log("Losing a heart");
 
+    this.sound.play("ouch", { volume: 0.5 });
     // 1. try to find a filled heart
     const filledHeartIndex = this.hearts.findIndex(
       (heart) => heart.texture.key === "filledHeart"
@@ -157,6 +162,12 @@ class PlayScene extends BaseScene {
       this.clicker,
       this.puppy,
       (clicker, puppy) => {
+        if (!this.barkPlayed) {
+          this.sound.play("bark", { volume: 0.5 });
+
+          this.barkPlayed = true;
+        }
+
         puppy.changeState("tickled");
       },
       null,
@@ -182,6 +193,7 @@ class PlayScene extends BaseScene {
       onComplete: () => {
         this.isClickerMoving = false;
         this.puppy.changeState("layingDown");
+        this.barkPlayed = false;
       },
     });
   }
