@@ -7,6 +7,8 @@ class PlayScene extends BaseScene {
     this.currentRound = null;
     this.currentRoundIndex = 0;
     this.sentenceText = null;
+
+    this.isClickerMoving = false;
   }
 
   init() {
@@ -52,6 +54,17 @@ class PlayScene extends BaseScene {
     this.clicker = this.physics.add
       .sprite(this.config.width / 2, this.config.height / 5, "clicker")
       .setScale(0.9);
+
+    this.clicker.body.setSize(
+      this.clicker.width * 0.2,
+      this.clicker.height * 0.2
+    );
+
+    this.clicker.body.setOffset(
+      this.clicker.width - this.clicker.width * 0.45,
+      this.clicker.height - this.clicker.height * 0.2
+    );
+
     this.clicker.setCollideWorldBounds(true);
 
     this.cursors = this.input.keyboard.createCursorKeys();
@@ -69,6 +82,7 @@ class PlayScene extends BaseScene {
     };
     this.time.delayedCall(1000, movePuppy);
 
+    // third parameter "this", is for context of which instance.
     this.input.keyboard.on("keydown", this.handleKeyInput, this);
 
     this.rounds = [
@@ -101,52 +115,112 @@ class PlayScene extends BaseScene {
   }
 
   loseHeart() {
-    console.log("Losing a heart!");
-    // Remove a heart from the screen
-    if (this.hearts.length > 0) {
-      let heart = this.hearts.pop();
-      heart.destroy();
-      if (this.hearts.length === 0) {
-        console.log("Game Over");
+    console.log("Losing a heart");
+
+    // 1. try to find a filled heart
+    const filledHeartIndex = this.hearts.findIndex(
+      (heart) => heart.texture.key === "filledHeart"
+    );
+
+    // 2. Start removing the heart based on fill/unfill
+    if (filledHeartIndex !== -1) {
+      // If a filled heart is found, change its texture back to the unfilled heart
+      this.hearts[filledHeartIndex].setTexture("heart");
+      console.log("Heart unfilled");
+    } else {
+      // If no filled heart is found, then remove an unfilled heart (if any are left)
+      if (this.hearts.length > 0) {
+        // Remove the last heart from the array
+        const heartToRemove = this.hearts.pop();
+        // Remove the heart sprite
+        heartToRemove.destroy();
+        console.log("Heart removed");
       }
+    }
+
+    // Check if there are no hearts left
+    if (this.hearts.length === 0) {
+      console.log("Game Over");
+      // Handle game over state here
     }
   }
 
   tickPuppy() {
+    if (this.isClickerMoving) return;
+
+    this.isClickerMoving = true;
+
+    // Move the clicker down
     this.clicker.setVelocityY(500);
     this.physics.add.overlap(
       this.clicker,
       this.puppy,
-      function (clicker, puppy) {
-        this.clicker.setVelocityY(0);
+      (clicker, puppy) => {
         puppy.changeState("tickled");
-        clicker.setPosition(this.config.width / 2, this.config.height / 5);
       },
       null,
       this
     );
+
+    // Reset the clicker position
+    this.time.delayedCall(1000, () => {
+      this.resetClickerPosition();
+    });
+  }
+
+  resetClickerPosition() {
+    // Stop the clicker's downward movement
+    this.clicker.setVelocityY(0);
+
+    // Move the clicker back to its original position with a tween
+    this.tweens.add({
+      targets: this.clicker,
+      y: this.config.height / 5,
+      duration: 500,
+      ease: "Power1",
+      onComplete: () => {
+        this.isClickerMoving = false;
+        this.puppy.changeState("layingDown");
+      },
+    });
   }
 
   handleKeyInput(event) {
-    if (this.currentRound) {
-      const currentSentence = this.currentRound.sentence;
+    const excludedKeys = [
+      "ArrowUp",
+      "ArrowDown",
+      "ArrowLeft",
+      "ArrowRight",
+      "Shift",
+    ];
 
-      // Check if the pressed key matches the current character in the sentence
-      if (event.key === currentSentence[this.sentenceProgress]) {
-        this.sentenceProgress++;
-        this.tickPuppy();
-        this.updateTextProgress();
+    // Check if the key is not one of the excluded keys
+    if (!excludedKeys.includes(event.key)) {
+      if (this.currentRound) {
+        const currentSentence = this.currentRound.sentence;
 
-        // If the entire sentence has been correctly typed
-        if (this.sentenceProgress >= currentSentence.length) {
-          console.log("Sentence completed.");
-          this.completeRound();
+        // Key Matching
+        if (
+          // case sensitivity
+          event.key.toLowerCase() ===
+          currentSentence.charAt(this.sentenceProgress).toLowerCase()
+        ) {
+          this.sentenceProgress++;
+          this.tickPuppy();
+          this.updateTextProgress();
+
+          // If the entire sentence has been correctly typed
+          if (this.sentenceProgress >= currentSentence.length) {
+            console.log("Sentence completed.");
+            this.completeRound();
+          }
+        } else {
+          this.loseHeart();
         }
-      } else {
-        this.loseHeart();
       }
     }
   }
+
   startNextRound() {
     if (this.currentRoundIndex < this.rounds.length) {
       console.log("Round starting.");
@@ -156,10 +230,14 @@ class PlayScene extends BaseScene {
       this.displaySentence(this.currentRound.sentence);
       this.currentRoundIndex++;
     } else {
+      // End state & victory scene / part is here.
       console.log("All rounds finished.");
+
       this.sentenceText.setVisible(false);
     }
   }
+
+  // placeholder
   completeRound() {
     console.log("Completed round.");
     this.fillHeart();
@@ -186,8 +264,10 @@ class PlayScene extends BaseScene {
     // Reset progress here
     this.sentenceProgress = 0;
   }
+
   updateTextProgress() {
     // Only the remaining part of the sentence should be displayed.
+    // This will extract a portion ofthe string starting from the provided index
     let remainingPart = this.currentRound.sentence.substring(
       this.sentenceProgress
     );
@@ -195,6 +275,7 @@ class PlayScene extends BaseScene {
     // Update the displayed sentence to only show the remaining part.
     this.sentenceText.setText(remainingPart);
   }
+
   // todo
   fillHeart() {
     console.log("Filling heart!");

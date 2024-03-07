@@ -18,10 +18,12 @@ class Round {
     }, this.timeLimit);
   }
 
+  /*
   checkProgress(currentProgress) {
     if (currentProgress >= this.sentence.length) {
       this.completed = true;
       this.onComplete();
     }
   }
+  */
 }
