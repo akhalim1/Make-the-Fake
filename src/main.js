@@ -8,7 +8,7 @@ const SHARED_CONFIG = {
   height: HEIGHT,
 };
 
-const Scenes = [PreloadScene, PlayScene];
+const Scenes = [PreloadScene, MenuScene, PlayScene];
 
 const createScene = (Scene) => new Scene(SHARED_CONFIG);
 // iterates over all the scenes, and creating a new instance of that scene with SHARED_CONFIG
