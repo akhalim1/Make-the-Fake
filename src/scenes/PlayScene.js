@@ -52,7 +52,7 @@ class PlayScene extends BaseScene {
     let stepsMoved = 0;
 
     this.clicker = this.physics.add
-      .sprite(this.config.width / 2, this.config.height / 5, "clicker")
+      .sprite(this.config.width / 2, this.config.height / 3, "clicker")
       .setScale(0.9);
 
     this.clicker.body.setSize(
@@ -87,14 +87,14 @@ class PlayScene extends BaseScene {
 
     this.rounds = [
       new Round(
-        "This is an example sentence",
+        "A playful puppy wags its tail excitedly",
         30000,
         this.completeRound.bind(this),
         this.failRound.bind(this)
       ),
 
       new Round(
-        "This is the second sentence",
+        "Gentle pats bring joyful barks and leaps",
         30000,
         this.completeRound.bind(this),
         this.failRound.bind(this)
@@ -142,6 +142,7 @@ class PlayScene extends BaseScene {
     if (this.hearts.length === 0) {
       console.log("Game Over");
       // Handle game over state here
+      this.showEndGameMessage("You Lose!");
     }
   }
 
@@ -232,7 +233,7 @@ class PlayScene extends BaseScene {
     } else {
       // End state & victory scene / part is here.
       console.log("All rounds finished.");
-
+      this.showEndGameMessage("You Win!");
       this.sentenceText.setVisible(false);
     }
   }
@@ -251,8 +252,8 @@ class PlayScene extends BaseScene {
   displaySentence(sentence) {
     if (!this.sentenceText) {
       this.sentenceText = this.add
-        .text(this.config.width / 2, 50, sentence, {
-          font: "18px Arial",
+        .text(this.config.width / 2, 100, sentence, {
+          font: "30px Arial",
           fill: "#ffffff",
           align: "center",
         })
@@ -274,6 +275,20 @@ class PlayScene extends BaseScene {
 
     // Update the displayed sentence to only show the remaining part.
     this.sentenceText.setText(remainingPart);
+  }
+
+  showEndGameMessage(message) {
+    // Display text
+    const endGameText = this.add
+      .text(this.config.width / 2, this.config.height / 2, message, {
+        font: "40px Arial",
+        fill: "#ffffff",
+      })
+      .setOrigin(0.5);
+
+    this.time.delayedCall(3000, () => {
+      // nagivate to different scene here
+    });
   }
 
   // todo
