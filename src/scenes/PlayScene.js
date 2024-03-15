@@ -73,19 +73,6 @@ class PlayScene extends BaseScene {
 
     this.cursors = this.input.keyboard.createCursorKeys();
 
-    const movePuppy = () => {
-      if (stepsMoved < moveSteps) {
-        this.puppy.x += 30;
-
-        stepsMoved++;
-
-        this.time.delayedCall(moveDelay, movePuppy);
-      } else {
-        this.puppy.changeState("layingDown");
-      }
-    };
-    this.time.delayedCall(1000, movePuppy);
-
     // third parameter "this", is for context of which instance.
     this.input.keyboard.on("keydown", this.handleKeyInput, this);
 
@@ -157,6 +144,7 @@ class PlayScene extends BaseScene {
     this.isClickerMoving = true;
 
     // Move the clicker down
+    // Collision happening here
     this.clicker.setVelocityY(500);
     this.physics.add.overlap(
       this.clicker,
@@ -169,6 +157,7 @@ class PlayScene extends BaseScene {
         }
 
         puppy.changeState("tickled");
+        return true;
       },
       null,
       this
@@ -192,7 +181,6 @@ class PlayScene extends BaseScene {
       ease: "Power1",
       onComplete: () => {
         this.isClickerMoving = false;
-        this.puppy.changeState("layingDown");
         this.barkPlayed = false;
       },
     });
@@ -218,7 +206,9 @@ class PlayScene extends BaseScene {
           event.key.toLowerCase() ===
           currentSentence.charAt(this.sentenceProgress).toLowerCase()
         ) {
+          // add invisible hitbox, if the clicker touches that instead then the heart is lost.
           this.sentenceProgress++;
+
           this.tickPuppy();
           this.updateTextProgress();
 
@@ -235,6 +225,7 @@ class PlayScene extends BaseScene {
   }
 
   startNextRound() {
+    this.movePuppyAcross();
     if (this.currentRoundIndex < this.rounds.length) {
       console.log("Round starting.");
 
@@ -321,5 +312,36 @@ class PlayScene extends BaseScene {
         console.log("Heart filled!");
       }
     }
+  }
+
+  movePuppyAcross() {
+    this.puppy.changeState("default");
+
+    // Starting pos
+    this.puppy.x = 100;
+
+    let moveSteps = 10;
+    let moveDelay = 200;
+    let stepsMoved = 0;
+
+    // Max Movement
+    const minX = 200;
+    const maxX = 500;
+
+    // Target x
+    const targetX = Phaser.Math.Between(minX, maxX);
+
+    const movePuppy = () => {
+      if (stepsMoved < moveSteps && this.puppy.x < targetX) {
+        this.puppy.x += Math.min(30, targetX - this.puppy.x);
+        stepsMoved++;
+        this.time.delayedCall(moveDelay, movePuppy);
+      } else {
+        console.log("Laying down.");
+        this.puppy.changeState("layingDown");
+      }
+    };
+
+    this.time.delayedCall(1000, movePuppy);
   }
 }

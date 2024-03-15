@@ -3,7 +3,7 @@ class MenuScene extends BaseScene {
     super("MenuScene", config);
 
     this.menu = [
-      { scene: "PlayScene", text: "Start", position: { x: 250, y: 500 } },
+      { scene: "PlayScene", text: "Start", position: { x: 250, y: 480 } },
       //{ scene: "TutorialScene", text: "Tutorial" },
       //{ scene: "CreditsScene", text: "Credits" },
     ];
@@ -11,17 +11,16 @@ class MenuScene extends BaseScene {
 
   preload() {
     // If your base scene doesn't preload this image, preload it here
-    this.load.image("gameTitle", "assets/gametitle.png");
+    this.load.image("gameTitle", "assets/newgametitle.png");
   }
 
   create() {
     // Add the game title as a background
     this.add
       .image(this.cameras.main.centerX, this.cameras.main.centerY, "gameTitle")
-      .setScale(4.8)
+      .setScale(0.6)
       .setOrigin(0.5, 0.5);
 
-    super.create();
     this.createMenu(this.menu, this.setUpMenuEvents.bind(this)); // second argument will bind the correct "this" context
 
     const startMenuItem = this.menu.find((item) => item.text === "Start");
@@ -49,13 +48,16 @@ class MenuScene extends BaseScene {
     textObj.on("pointerdown", () => {});
 
     textObj.on("pointerup", () => {
-      //console.log("Clicked");
+      // Start a fade out effect when a menu item is clicked
+      this.cameras.main.fadeOut(1000, 0, 0, 0);
 
-      menuItem.scene && this.scene.start(menuItem.scene);
+      this.cameras.main.once("camerafadeoutcomplete", () => {
+        menuItem.scene && this.scene.start(menuItem.scene);
 
-      if (menuItem === "Exit") {
-        this.game.destroy(true);
-      }
+        if (menuItem === "Exit") {
+          this.game.destroy(true);
+        }
+      });
     });
   }
 
