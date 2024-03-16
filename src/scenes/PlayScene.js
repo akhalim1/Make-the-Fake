@@ -3,7 +3,7 @@ class PlayScene extends BaseScene {
     super("PlayScene", config);
 
     this.score = 0;
-    this.maxRounds = 5;
+    this.maxRounds = 1;
     this.sentenceProgress = 0;
     this.currentRound = null;
     this.currentRoundIndex = 0;
@@ -242,7 +242,7 @@ class PlayScene extends BaseScene {
   startNextRound() {
     this.movePuppyAcross();
     let sentence;
-    if (this.currentRoundIndex <= this.maxRounds) {
+    if (this.currentRoundIndex < this.maxRounds) {
       console.log("Round starting.");
 
       // Example of difficulty progression
@@ -264,10 +264,6 @@ class PlayScene extends BaseScene {
       this.currentRound.start();
       this.displaySentence(this.currentRound.sentence);
       this.currentRoundIndex++;
-    } else {
-      console.log("All rounds finished.");
-      this.showEndGameMessage("You Win!");
-      this.sentenceText.setVisible(false);
     }
   }
 
@@ -279,7 +275,16 @@ class PlayScene extends BaseScene {
   completeRound() {
     console.log("Completed round.");
     this.fillHeart();
-    this.startNextRound();
+    this.resetClickerPosition();
+
+    if (this.currentRoundIndex !== this.maxRounds) {
+      this.startNextRound();
+    } else {
+      console.log("All rounds finished.");
+      this.showEndGameMessage("You Win!");
+      this.puppy.changeState("tailwag");
+      this.sentenceText.setVisible(false);
+    }
   }
 
   failRound() {

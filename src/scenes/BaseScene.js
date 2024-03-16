@@ -1,6 +1,5 @@
 class BaseScene extends Phaser.Scene {
   constructor(key, config) {
-    // passing key since every other class will be having a unique key that will be passed here
     super(key);
     this.config = config;
     this.fontSize = 40;
@@ -39,6 +38,13 @@ class BaseScene extends Phaser.Scene {
 
       lastMenuPositionY += this.lineHeight;
       setUpMenuEvents(menuItem);
+    });
+  }
+
+  startScene(sceneKey) {
+    this.cameras.main.fadeOut(1000, 0, 0, 0);
+    this.cameras.main.once("camerafadeoutcomplete", () => {
+      this.scene.start(sceneKey);
     });
   }
 }
