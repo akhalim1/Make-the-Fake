@@ -73,6 +73,22 @@ class PlayScene extends BaseScene {
 
     this.cursors = this.input.keyboard.createCursorKeys();
 
+    // invisible collision box here
+    this.invisibleBox = this.physics.add
+      .sprite(300, 700, "filledHeart")
+      .setVisible(false)
+      .setSize(1000, 100);
+
+    this.physics.add.overlap(
+      this.clicker,
+      this.invisibleBox,
+      this.handleInvisibleCollision,
+      () => {
+        this.resetClickerPosition();
+      },
+      this
+    );
+
     // third parameter "this", is for context of which instance.
     this.input.keyboard.on("keydown", this.handleKeyInput, this);
 
@@ -96,6 +112,10 @@ class PlayScene extends BaseScene {
   }
 
   update() {
+    if (!this.physics.overlap(this.clicker, this.invisibleBox)) {
+      this.isClickerMoving = false;
+    }
+
     if (this.cursors.left.isDown) {
       this.clicker.setVelocityX(-160);
     } else if (this.cursors.right.isDown) {
@@ -106,7 +126,7 @@ class PlayScene extends BaseScene {
   }
 
   loseHeart() {
-    console.log("Losing a heart");
+    // console.log("Losing a heart");
 
     this.sound.play("ouch", { volume: 0.5 });
     // 1. try to find a filled heart
@@ -126,7 +146,7 @@ class PlayScene extends BaseScene {
         const heartToRemove = this.hearts.pop();
         // Remove the heart sprite
         heartToRemove.destroy();
-        console.log("Heart removed");
+        //console.log("Heart removed");
       }
     }
 
@@ -146,7 +166,7 @@ class PlayScene extends BaseScene {
     // Move the clicker down
     // Collision happening here
     this.clicker.setVelocityY(500);
-    this.physics.add.overlap(
+    this.physics.add.collider(
       this.clicker,
       this.puppy,
       (clicker, puppy) => {
@@ -157,19 +177,19 @@ class PlayScene extends BaseScene {
         }
 
         puppy.changeState("tickled");
-        return true;
+
+        this.resetClickerPosition();
       },
       null,
       this
     );
 
     // Reset the clicker position
-    this.time.delayedCall(1000, () => {
-      this.resetClickerPosition();
-    });
+    this.time.delayedCall(1000, () => {});
   }
 
   resetClickerPosition() {
+    console.log("Resetting clicker..");
     // Stop the clicker's downward movement
     this.clicker.setVelocityY(0);
 
@@ -207,9 +227,8 @@ class PlayScene extends BaseScene {
           currentSentence.charAt(this.sentenceProgress).toLowerCase()
         ) {
           // add invisible hitbox, if the clicker touches that instead then the heart is lost.
-          this.sentenceProgress++;
-
           this.tickPuppy();
+          this.sentenceProgress++;
           this.updateTextProgress();
 
           // If the entire sentence has been correctly typed
@@ -343,5 +362,12 @@ class PlayScene extends BaseScene {
     };
 
     this.time.delayedCall(1000, movePuppy);
+  }
+
+  handleInvisibleCollision(clicker, box) {
+    if (!this.isClickerMoving) {
+      this.loseHeart();
+      this.isClickerMoving = true;
+    }
   }
 }
