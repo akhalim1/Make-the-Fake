@@ -32,15 +32,25 @@ class BaseScene extends Phaser.Scene {
         this.screenCenter[0],
         this.screenCenter[1] + lastMenuPositionY,
       ];
-      menuItem.textObj = this.add
-        .text(...menuPosition, menuItem.text, this.fontOptions)
-        .setOrigin(0.5, 1);
+
+      if (menuItem.text === "Start") {
+        menuItem.textObj = this.add
+          .text(...menuPosition, menuItem.text, this.fontOptions)
+          .setOrigin(0.5, 1);
+      } else {
+        const spriteKey =
+          menuItem.text === "Tutorial" ? "tutorialIcon" : "creditsIcon";
+
+        menuItem.textObj = this.add
+          .sprite(...menuPosition, spriteKey)
+          .setScale(0.2)
+          .setInteractive();
+      }
 
       lastMenuPositionY += this.lineHeight;
       setUpMenuEvents(menuItem);
     });
   }
-
   startScene(sceneKey) {
     this.cameras.main.fadeOut(1000, 0, 0, 0);
     this.cameras.main.once("camerafadeoutcomplete", () => {

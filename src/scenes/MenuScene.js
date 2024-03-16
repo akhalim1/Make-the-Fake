@@ -4,14 +4,23 @@ class MenuScene extends BaseScene {
 
     this.menu = [
       { scene: "PlayScene", text: "Start", position: { x: 250, y: 480 } },
-      //{ scene: "TutorialScene", text: "Tutorial" },
-      //{ scene: "CreditsScene", text: "Credits" },
+      {
+        scene: "TutorialScene",
+        text: "Tutorial",
+        position: { x: this.config.width - 120, y: this.config.height - 50 },
+      },
+      {
+        scene: "CreditsScene",
+        text: "Credits",
+        position: { x: this.config.width - 50, y: this.config.height - 50 },
+      },
     ];
   }
 
   preload() {
-    // If your base scene doesn't preload this image, preload it here
     this.load.image("gameTitle", "assets/newgametitle.png");
+    this.load.image("creditsIcon", "assets/creditsicon.png");
+    this.load.image("tutorialIcon", "assets/tutorialicon.png");
   }
 
   create() {
@@ -36,14 +45,6 @@ class MenuScene extends BaseScene {
     if (menuItem.position) {
       textObj.setPosition(menuItem.position.x, menuItem.position.y);
     }
-
-    textObj.on("pointerover", () => {
-      textObj.setStyle({ fill: "#A020F0" });
-    });
-
-    textObj.on("pointerout", () => {
-      textObj.setStyle({ fill: "#fff" });
-    });
 
     textObj.on("pointerdown", () => {});
 
