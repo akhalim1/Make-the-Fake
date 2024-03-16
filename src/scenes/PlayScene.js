@@ -3,6 +3,7 @@ class PlayScene extends BaseScene {
     super("PlayScene", config);
 
     this.score = 0;
+    this.maxRounds = 5;
     this.sentenceProgress = 0;
     this.currentRound = null;
     this.currentRoundIndex = 0;
@@ -10,6 +11,22 @@ class PlayScene extends BaseScene {
 
     this.isClickerMoving = false;
     this.barkPlayed = false;
+
+    this.sentencePool = {
+      easy: [
+        "A playful puppy wags its tail",
+        "The puppy barks happily",
+        "A gentle pat soothes the puppy",
+      ],
+      medium: [
+        "The curious puppy sniffs around and wags its tail",
+        "With each pat, the puppy's joyous barks fill the air",
+      ],
+      hard: [
+        "The energetic puppy leaps around, wagging its tail and seeking attention.",
+        "Joyful barks echo as the puppy excitedly jumps, seeking gentle pats and tickles.",
+      ],
+    };
   }
 
   init() {
@@ -91,22 +108,6 @@ class PlayScene extends BaseScene {
 
     // third parameter "this", is for context of which instance.
     this.input.keyboard.on("keydown", this.handleKeyInput, this);
-
-    this.rounds = [
-      new Round(
-        "A playful puppy wags its tail excitedly",
-        30000,
-        this.completeRound.bind(this),
-        this.failRound.bind(this)
-      ),
-
-      new Round(
-        "Gentle pats bring joyful barks and leaps",
-        30000,
-        this.completeRound.bind(this),
-        this.failRound.bind(this)
-      ),
-    ];
 
     this.startNextRound();
   }
@@ -245,19 +246,38 @@ class PlayScene extends BaseScene {
 
   startNextRound() {
     this.movePuppyAcross();
-    if (this.currentRoundIndex < this.rounds.length) {
+    let sentence;
+    if (this.currentRoundIndex <= this.maxRounds) {
       console.log("Round starting.");
 
-      this.currentRound = this.rounds[this.currentRoundIndex];
+      // Example of difficulty progression
+      if (this.currentRoundIndex < 2) {
+        sentence = this.getRandomSentence(this.sentencePool.easy);
+      } else if (this.currentRoundIndex < 4) {
+        sentence = this.getRandomSentence(this.sentencePool.medium);
+      } else {
+        sentence = this.getRandomSentence(this.sentencePool.hard);
+      }
+
+      this.currentRound = new Round(
+        sentence,
+        30000,
+        this.completeRound.bind(this),
+        this.failRound.bind(this)
+      );
+
       this.currentRound.start();
       this.displaySentence(this.currentRound.sentence);
       this.currentRoundIndex++;
     } else {
-      // End state & victory scene / part is here.
       console.log("All rounds finished.");
       this.showEndGameMessage("You Win!");
       this.sentenceText.setVisible(false);
     }
+  }
+
+  getRandomSentence(sentenceArray) {
+    return sentenceArray[Math.floor(Math.random() * sentenceArray.length)];
   }
 
   // placeholder
