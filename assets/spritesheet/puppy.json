@@ -1,32 +1,60 @@
 {
   "frames": {
     "default": {
-      "frame": { "x": 0, "y": 0, "w": 200, "h": 192 },
+      "frame": { "x": 0, "y": 0, "w": 400, "h": 400 },
       "rotated": false,
       "trimmed": false,
-      "spriteSourceSize": { "x": 0, "y": 0, "w": 200, "h": 192 },
-      "sourceSize": { "w": 200, "h": 192 }
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 400, "h": 400 },
+      "sourceSize": { "w": 400, "h": 400 }
     },
     "layingDown": {
-      "frame": { "x": 200, "y": 0, "w": 200, "h": 192 },
+      "frame": { "x": 400, "y": 0, "w": 400, "h": 400 },
       "rotated": false,
       "trimmed": false,
-      "spriteSourceSize": { "x": 0, "y": 0, "w": 200, "h": 192 },
-      "sourceSize": { "w": 200, "h": 192 }
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 400, "h": 400 },
+      "sourceSize": { "w": 400, "h": 400 }
     },
     "tickled": {
-      "frame": { "x": 0, "y": 192, "w": 200, "h": 192 },
+      "frame": { "x": 800, "y": 0, "w": 400, "h": 400 },
       "rotated": false,
       "trimmed": false,
-      "spriteSourceSize": { "x": 0, "y": 0, "w": 200, "h": 192 },
-      "sourceSize": { "w": 200, "h": 192 }
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 400, "h": 400 },
+      "sourceSize": { "w": 400, "h": 400 }
+    },
+    "ouch": {
+      "frame": { "x": 0, "y": 400, "w": 400, "h": 400 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 400, "h": 400 },
+      "sourceSize": { "w": 400, "h": 400 }
+    },
+    "tailwag1": {
+      "frame": { "x": 400, "y": 400, "w": 400, "h": 400 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 400, "h": 400 },
+      "sourceSize": { "w": 400, "h": 400 }
+    },
+    "tailwag2": {
+      "frame": { "x": 800, "y": 400, "w": 400, "h": 400 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 400, "h": 400 },
+      "sourceSize": { "w": 400, "h": 400 }
+    },
+    "tailwag3": {
+      "frame": { "x": 0, "y": 800, "w": 400, "h": 400 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 400, "h": 400 },
+      "sourceSize": { "w": 400, "h": 400 }
     }
   },
   "meta": {
     "app": "https://github.com/piskelapp/piskel/",
     "version": "1.0",
-    "image": "image.png",
+    "image": "New Piskel.png",
     "format": "RGBA8888",
-    "size": { "w": 400, "h": 384 }
+    "size": { "w": 1200, "h": 1200 }
   }
 }

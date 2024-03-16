@@ -63,7 +63,7 @@ class PlayScene extends BaseScene {
       this.hearts.push(heart);
     }
 
-    this.puppy = new Puppy(this, 100, 550).setScale(1);
+    this.puppy = new Puppy(this, 100, 550).setScale(0.5);
 
     this.puppy.changeState("default");
     this.ZKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
@@ -127,35 +127,30 @@ class PlayScene extends BaseScene {
   }
 
   loseHeart() {
-    // console.log("Losing a heart");
-
     this.sound.play("ouch", { volume: 0.5 });
-    // 1. try to find a filled heart
     const filledHeartIndex = this.hearts.findIndex(
       (heart) => heart.texture.key === "filledHeart"
     );
 
-    // 2. Start removing the heart based on fill/unfill
     if (filledHeartIndex !== -1) {
-      // If a filled heart is found, change its texture back to the unfilled heart
       this.hearts[filledHeartIndex].setTexture("heart");
-      console.log("Heart unfilled");
     } else {
-      // If no filled heart is found, then remove an unfilled heart (if any are left)
       if (this.hearts.length > 0) {
-        // Remove the last heart from the array
         const heartToRemove = this.hearts.pop();
-        // Remove the heart sprite
         heartToRemove.destroy();
-        //console.log("Heart removed");
       }
     }
 
-    // Check if there are no hearts left
     if (this.hearts.length === 0) {
-      console.log("Game Over");
-      // Handle game over state here
       this.showEndGameMessage("You Lose!");
+    } else {
+      this.puppy.changeState("ouch");
+      this.puppy.setTint(0xff0000);
+
+      this.time.delayedCall(1000, () => {
+        this.puppy.clearTint();
+        this.puppy.changeState("layingDown");
+      });
     }
   }
 
