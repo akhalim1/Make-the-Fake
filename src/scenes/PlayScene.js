@@ -34,6 +34,16 @@ class PlayScene extends BaseScene {
     this.hearts = [];
     this.maxHearts = 5;
     this.currentState = "default";
+
+    this.score = 0;
+    this.maxRounds = 1;
+    this.sentenceProgress = 0;
+    this.currentRound = null;
+    this.currentRoundIndex = 0;
+    this.sentenceText = null;
+
+    this.isClickerMoving = false;
+    this.barkPlayed = false;
   }
 
   preload() {
@@ -53,6 +63,11 @@ class PlayScene extends BaseScene {
   }
 
   create() {
+    // reset button
+    this.resetKey = this.input.keyboard.addKey(
+      Phaser.Input.Keyboard.KeyCodes.BACKTICK
+    );
+
     // Background + other scene setups
     this.background = this.add
       .tileSprite(0, 0, this.config.width, this.config.height, "background")
@@ -123,6 +138,10 @@ class PlayScene extends BaseScene {
       this.clicker.setVelocityX(160);
     } else {
       this.clicker.setVelocityX(0);
+    }
+
+    if (this.resetKey.isDown) {
+      this.resetGame();
     }
   }
 
@@ -240,6 +259,7 @@ class PlayScene extends BaseScene {
   }
 
   startNextRound() {
+    console.log("test1");
     this.movePuppyAcross();
     let sentence;
     if (this.currentRoundIndex < this.maxRounds) {
@@ -263,7 +283,9 @@ class PlayScene extends BaseScene {
 
       this.currentRound.start();
       this.displaySentence(this.currentRound.sentence);
+      console.log(this.currentRound.sentence);
       this.currentRoundIndex++;
+      console.log(this.currentRoundIndex);
     }
   }
 
@@ -389,5 +411,9 @@ class PlayScene extends BaseScene {
       this.loseHeart();
       this.isClickerMoving = true;
     }
+  }
+
+  resetGame() {
+    this.scene.restart();
   }
 }
