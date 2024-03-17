@@ -3,7 +3,7 @@ class MenuScene extends BaseScene {
     super("MenuScene", config);
 
     this.menu = [
-      { scene: "PlayScene", text: "Start", position: { x: 250, y: 480 } },
+      { scene: "PlayScene", text: "START", position: { x: 250, y: 480 } },
       {
         scene: "TutorialScene",
         text: "Tutorial",
@@ -32,7 +32,7 @@ class MenuScene extends BaseScene {
 
     this.createMenu(this.menu, this.setUpMenuEvents.bind(this)); // second argument will bind the correct "this" context
 
-    const startMenuItem = this.menu.find((item) => item.text === "Start");
+    const startMenuItem = this.menu.find((item) => item.text === "START");
     if (startMenuItem && startMenuItem.textObj) {
       this.makeTextBlink(startMenuItem.textObj);
     }
