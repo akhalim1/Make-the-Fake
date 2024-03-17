@@ -4,12 +4,12 @@ class Round {
     this.timeLimit = timeLimit;
     this.onComplete = onComplete;
     this.onFail = onFail;
-    this.startTime = null;
+    this.startTime = Date.now();
     this.completed = false;
   }
 
   start() {
-    this.startTune = Date.now();
+    this.startTime = Date.now();
 
     setTimeout(() => {
       if (!this.completed) {
@@ -18,12 +18,9 @@ class Round {
     }, this.timeLimit);
   }
 
-  /*
-  checkProgress(currentProgress) {
-    if (currentProgress >= this.sentence.length) {
-      this.completed = true;
-      this.onComplete();
-    }
+  getRemainingTime() {
+    const elapsedTime = Date.now() - this.startTime;
+
+    return Math.max(0, this.timeLimit - elapsedTime);
   }
-  */
 }

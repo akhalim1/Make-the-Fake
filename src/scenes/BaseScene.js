@@ -8,9 +8,17 @@ class BaseScene extends Phaser.Scene {
     this.screenCenter = [config.width / 2, config.height / 2];
   }
 
-  create() {
-    this.add.image(0, 0, "ocean").setOrigin(0);
+  preload() {
+    this.load.bitmapFont(
+      "copyduck",
+      "assets/font/copyduck.png",
+      "assets/font/copyduck.xml"
+    );
 
+    this.load.image("pinkbg", "assets/pinkbg.png");
+  }
+  create() {
+    this.add.image(0, 0, "pinkbg").setOrigin(0);
     if (this.config.canGoBack) {
       const backButton = this.add
         .image(this.config.width - 10, this.config.height - 10, "backbutton")

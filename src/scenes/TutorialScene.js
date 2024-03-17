@@ -9,13 +9,16 @@ class TutorialScene extends BaseScene {
     const tutorialText =
       "Each round, align the clicker to the puppy's stomach. Then finish the sentence to progress to the next round. Complete all 5 rounds to finish the game.";
 
-    const textOptions = {
-      ...this.fontOptions,
-      wordWrap: { width: this.config.width - 40 },
-      align: "center",
-    };
     this.add
-      .text(...this.screenCenter, tutorialText, textOptions)
-      .setOrigin(0.5);
+      .bitmapText(
+        this.screenCenter[0],
+        this.screenCenter[1],
+        "copyduck",
+        tutorialText,
+        30
+      )
+      .setOrigin(0.5)
+      .setMaxWidth(this.config.width - 40)
+      .setTint(0xff0000);
   }
 }

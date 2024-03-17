@@ -60,6 +60,12 @@ class PlayScene extends BaseScene {
 
     this.load.audio("ouch", "assets/ouch.mp3");
     this.load.audio("bark", "assets/bark.mp3");
+
+    this.load.bitmapFont(
+      "copyduck",
+      "assets/font/copyduck.png",
+      "assets/font/copyduck.xml"
+    );
   }
 
   create() {
@@ -121,6 +127,14 @@ class PlayScene extends BaseScene {
       this
     );
 
+    this.roundTimerText = this.add.bitmapText(
+      this.config.width - 150,
+      10,
+      "copyduck",
+      "",
+      30
+    );
+
     // third parameter "this", is for context of which instance.
     this.input.keyboard.on("keydown", this.handleKeyInput, this);
 
@@ -142,6 +156,13 @@ class PlayScene extends BaseScene {
 
     if (this.resetKey.isDown) {
       this.resetGame();
+    }
+
+    if (this.currentRound) {
+      const remainingTime = this.currentRound.getRemainingTime();
+
+      const seconds = Math.round(remainingTime / 1000);
+      this.roundTimerText.setText(`Time: ${seconds}`);
     }
   }
 
@@ -316,11 +337,7 @@ class PlayScene extends BaseScene {
   displaySentence(sentence) {
     if (!this.sentenceText) {
       this.sentenceText = this.add
-        .text(this.config.width / 2, 100, sentence, {
-          font: "30px Arial",
-          fill: "#ffffff",
-          align: "center",
-        })
+        .bitmapText(this.config.width / 2, 100, "copyduck", sentence, 30)
         .setOrigin(0.5);
     } else {
       this.sentenceText.setText(sentence);
@@ -343,11 +360,15 @@ class PlayScene extends BaseScene {
 
   showEndGameMessage(message) {
     // Display text
+
     const endGameText = this.add
-      .text(this.config.width / 2, this.config.height / 2, message, {
-        font: "40px Arial",
-        fill: "#ffffff",
-      })
+      .bitmapText(
+        this.config.width / 2,
+        this.config.height / 2,
+        "copyduck",
+        message,
+        30
+      )
       .setOrigin(0.5);
 
     this.time.delayedCall(3000, () => {

@@ -8,13 +8,16 @@ class CreditsScene extends BaseScene {
 
     const creditsText = "Credits - ???";
 
-    const textOptions = {
-      ...this.fontOptions,
-      wordWrap: { width: this.config.width - 40 },
-      align: "center",
-    };
     this.add
-      .text(...this.screenCenter, creditsText, textOptions)
-      .setOrigin(0.5);
+      .bitmapText(
+        this.screenCenter[0],
+        this.screenCenter[1],
+        "copyduck",
+        creditsText,
+        30
+      )
+      .setOrigin(0.5)
+      .setMaxWidth(this.config.width - 40)
+      .setTint(0xff0000);
   }
 }

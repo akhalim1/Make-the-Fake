@@ -1,3 +1,11 @@
+/*
+
+Physics
+Cameras
+Animation Manager
+Tween Manager
+Timers
+*/
 "use strict";
 
 const WIDTH = 800;
