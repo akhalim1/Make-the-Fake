@@ -8,7 +8,7 @@ class PlayScene extends BaseScene {
     this.currentRound = null;
     this.currentRoundIndex = 0;
     this.sentenceText = null;
-
+    this.victory = false;
     this.isClickerMoving = false;
     this.barkPlayed = false;
 
@@ -158,7 +158,7 @@ class PlayScene extends BaseScene {
       this.resetGame();
     }
 
-    if (this.currentRound) {
+    if (this.currentRound && !this.victory) {
       const remainingTime = this.currentRound.getRemainingTime();
 
       const seconds = Math.round(remainingTime / 1000);
@@ -167,6 +167,7 @@ class PlayScene extends BaseScene {
   }
 
   loseHeart() {
+    if (this.victory) return;
     this.sound.play("ouch", { volume: 0.5 });
     const filledHeartIndex = this.hearts.findIndex(
       (heart) => heart.texture.key === "filledHeart"
@@ -183,6 +184,7 @@ class PlayScene extends BaseScene {
 
     if (this.hearts.length === 0) {
       this.showEndGameMessage("You Lose!");
+      this.startScene("GameOverScene");
     } else {
       this.puppy.changeState("ouch");
       this.puppy.setTint(0xff0000);
@@ -325,6 +327,7 @@ class PlayScene extends BaseScene {
     } else {
       console.log("All rounds finished.");
       this.showEndGameMessage("You Win!");
+      this.victory = true;
       this.puppy.changeState("tailwag");
       this.sentenceText.setVisible(false);
     }
@@ -332,6 +335,7 @@ class PlayScene extends BaseScene {
 
   failRound() {
     console.log("Failed round.");
+    this.startScene("GameOverScene");
   }
 
   displaySentence(sentence) {

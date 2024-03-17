@@ -22,6 +22,7 @@ const Scenes = [
   PlayScene,
   TutorialScene,
   CreditsScene,
+  GameOverScene,
 ];
 
 const createScene = (Scene) => new Scene(SHARED_CONFIG);
