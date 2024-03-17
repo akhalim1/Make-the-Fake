@@ -71,7 +71,7 @@ class PlayScene extends BaseScene {
   create() {
     // reset button
     this.resetKey = this.input.keyboard.addKey(
-      Phaser.Input.Keyboard.KeyCodes.BACKTICK
+      Phaser.Input.Keyboard.KeyCodes.ONE
     );
 
     // Background + other scene setups

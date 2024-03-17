@@ -7,7 +7,7 @@ class TutorialScene extends BaseScene {
     super.create();
 
     const tutorialText =
-      "Each round, align the clicker to the puppy's stomach. Then finish the sentence to progress to the next round. Complete all 5 rounds to finish the game.";
+      "Each round, align the clicker to the puppy's stomach. Then finish the sentence to progress to the next round. Complete all 5 rounds to finish the game. Press 1 to restart.";
 
     this.add
       .bitmapText(
