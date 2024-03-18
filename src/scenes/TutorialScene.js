@@ -2,7 +2,7 @@ class TutorialScene extends BaseScene {
   constructor(config) {
     super("TutorialScene", { ...config, canGoBack: true });
   }
-
+  
   create() {
     super.create();
 

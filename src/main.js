@@ -1,10 +1,10 @@
 /*
-
-Physics
-Cameras
-Animation Manager
-Tween Manager
-Timers
+Phaser Major Components:
+- Physics System (Collisions)
+- Text Object (bitmapText)
+- Animation Manager (Puppy)
+- Tween Manager (Clicker)
+- Timers (Sentence Timer)
 */
 "use strict";
 

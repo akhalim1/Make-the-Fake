@@ -3,7 +3,7 @@ class PlayScene extends BaseScene {
     super("PlayScene", config);
 
     this.score = 0;
-    this.maxRounds = 1;
+    this.maxRounds = 5;
     this.sentenceProgress = 0;
     this.currentRound = null;
     this.currentRoundIndex = 0;
@@ -27,6 +27,9 @@ class PlayScene extends BaseScene {
         "Joyful barks echo as the puppy excitedly jumps, seeking gentle pats and tickles.",
       ],
     };
+
+    // adding timerIDs array to keep track of the timers due to duplication issue
+    this.timerIDs = [];
   }
 
   init() {
@@ -36,7 +39,7 @@ class PlayScene extends BaseScene {
     this.currentState = "default";
 
     this.score = 0;
-    this.maxRounds = 1;
+    this.maxRounds = 5;
     this.sentenceProgress = 0;
     this.currentRound = null;
     this.currentRoundIndex = 0;
@@ -53,7 +56,7 @@ class PlayScene extends BaseScene {
       Phaser.Input.Keyboard.KeyCodes.ONE
     );
 
-    // Background + other scene setups
+    // Background + setting up Puppy & Clicker instances
     this.background = this.add
       .tileSprite(0, 0, this.config.width, this.config.height, "background")
       .setOrigin(0, 0);
@@ -90,7 +93,7 @@ class PlayScene extends BaseScene {
 
     this.cursors = this.input.keyboard.createCursorKeys();
 
-    // invisible collision box here
+    // Handling invisible collision box here
     this.invisibleBox = this.physics.add
       .sprite(300, 700, "filledHeart")
       .setVisible(false)
@@ -114,7 +117,6 @@ class PlayScene extends BaseScene {
       30
     );
 
-    // third parameter "this", is for context of which instance.
     this.input.keyboard.on("keydown", this.handleKeyInput, this);
 
     this.startNextRound();
@@ -181,7 +183,7 @@ class PlayScene extends BaseScene {
     this.isClickerMoving = true;
 
     // Move the clicker down
-    // Collision happening here
+    // Clicker collision happening here
     this.clicker.setVelocityY(500);
     this.physics.add.collider(
       this.clicker,
@@ -250,7 +252,7 @@ class PlayScene extends BaseScene {
 
           // If the entire sentence has been correctly typed
           if (this.sentenceProgress >= currentSentence.length) {
-            console.log("Sentence completed.");
+            //console.log("Sentence completed
             this.completeRound();
           }
         } else {
@@ -261,13 +263,11 @@ class PlayScene extends BaseScene {
   }
 
   startNextRound() {
-    console.log("test1");
     this.movePuppyAcross();
     let sentence;
     if (this.currentRoundIndex < this.maxRounds) {
-      console.log("Round starting.");
+      //console.log("Round starting.");
 
-      // Example of difficulty progression
       if (this.currentRoundIndex < 2) {
         sentence = this.getRandomSentence(this.sentencePool.easy);
       } else if (this.currentRoundIndex < 4) {
@@ -280,14 +280,15 @@ class PlayScene extends BaseScene {
         sentence,
         30000,
         this.completeRound.bind(this),
-        this.failRound.bind(this)
+        this.failRound.bind(this),
+        this
       );
 
       this.currentRound.start();
       this.displaySentence(this.currentRound.sentence);
-      console.log(this.currentRound.sentence);
+      //console.log(this.currentRound.sentence);
       this.currentRoundIndex++;
-      console.log(this.currentRoundIndex);
+      //console.log(this.currentRoundIndex);
     }
   }
 
@@ -295,16 +296,15 @@ class PlayScene extends BaseScene {
     return sentenceArray[Math.floor(Math.random() * sentenceArray.length)];
   }
 
-  // placeholder
   completeRound() {
-    console.log("Completed round.");
     this.fillHeart();
     this.resetClickerPosition();
 
     if (this.currentRoundIndex !== this.maxRounds) {
+      this.stopAllTimers();
       this.startNextRound();
     } else {
-      console.log("All rounds finished.");
+      //console.log("All rounds finished.");
       this.showEndGameMessage("You Win!");
       this.victory = true;
       this.puppy.changeState("tailwag");
@@ -313,9 +313,10 @@ class PlayScene extends BaseScene {
   }
 
   failRound() {
-    console.log("Failed round.");
+    //console.log("Failed round.");
 
-    if (!this.victory) {
+    console.log(this.currentRound.completed);
+    if (!this.victory && !this.currentRound.completed) {
       this.startScene("GameOverScene");
     }
   }
@@ -324,6 +325,7 @@ class PlayScene extends BaseScene {
     if (!this.sentenceText) {
       this.sentenceText = this.add
         .bitmapText(this.config.width / 2, 100, "copyduck", sentence, 30)
+        .setMaxWidth(this.config.width - 40)
         .setOrigin(0.5);
     } else {
       this.sentenceText.setText(sentence);
@@ -346,7 +348,6 @@ class PlayScene extends BaseScene {
 
   showEndGameMessage(message) {
     // Display text
-
     const endGameText = this.add
       .bitmapText(
         this.config.width / 2,
@@ -356,16 +357,9 @@ class PlayScene extends BaseScene {
         30
       )
       .setOrigin(0.5);
-
-    this.time.delayedCall(3000, () => {
-      // nagivate to different scene here
-    });
   }
 
-  // todo
   fillHeart() {
-    console.log("Filling heart!");
-
     if (this.hearts.length > 0) {
       // Find the first unfilled heart
       const unfilledHeartIndex = this.hearts.findIndex(
@@ -376,8 +370,6 @@ class PlayScene extends BaseScene {
 
         // Set the texture to filled heart
         unfilledHeart.setTexture("filledHeart");
-
-        console.log("Heart filled!");
       }
     }
   }
@@ -405,7 +397,6 @@ class PlayScene extends BaseScene {
         stepsMoved++;
         this.time.delayedCall(moveDelay, movePuppy);
       } else {
-        console.log("Laying down.");
         this.puppy.changeState("layingDown");
       }
     };
@@ -422,5 +413,14 @@ class PlayScene extends BaseScene {
 
   resetGame() {
     this.scene.restart();
+  }
+
+  stopAllTimers() {
+    this.timerIDs.forEach((id) => clearTimeout(id));
+    this.timerIDs = [];
+  }
+
+  addTimerID(id) {
+    this.timerIDs.push(id);
   }
 }
