@@ -150,10 +150,13 @@ class PlayScene extends BaseScene {
   loseHeart() {
     if (this.victory) return;
     this.sound.play("ouch", { volume: 0.5 });
-    const filledHeartIndex = this.hearts.findIndex(
-      (heart) => heart.texture.key === "filledHeart"
-    );
-
+    let filledHeartIndex = -1;
+    for (let i = this.hearts.length - 1; i >= 0; i--) {
+      if (this.hearts[i].texture.key === "filledHeart") {
+        filledHeartIndex = i;
+        break;
+      }
+    }
     if (filledHeartIndex !== -1) {
       this.hearts[filledHeartIndex].setTexture("heart");
     } else {
