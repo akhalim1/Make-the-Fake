@@ -17,12 +17,6 @@ class MenuScene extends BaseScene {
     ];
   }
 
-  preload() {
-    this.load.image("gameTitle", "assets/newgametitle.png");
-    this.load.image("creditsIcon", "assets/creditsicon.png");
-    this.load.image("tutorialIcon", "assets/tutorialicon.png");
-  }
-
   create() {
     // Add the game title as a background
     this.add
