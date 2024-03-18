@@ -310,6 +310,7 @@ class PlayScene extends BaseScene {
   }
 
   completeRound() {
+    this.sound.play("complete", { volume: 0.5 });
     this.fillHeart();
     this.resetClickerPosition();
 

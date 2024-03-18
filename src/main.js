@@ -7,8 +7,9 @@ Phaser Major Components:
 - Cameras (Fade Transition)
 
 SFX Source/Credit Links
-Puppy Barking Noise: https://www.youtube.com/watch?v=paElvuhbxIg
+Puppy Barking SFX: https://www.youtube.com/watch?v=paElvuhbxIg
 Ouch SFX: https://www.youtube.com/watch?v=mNuUV2nN9kE
+Round Complete SFX: https://www.youtube.com/watch?v=0z4nKnHMkaE
 */
 "use strict";
 
