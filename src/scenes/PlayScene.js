@@ -17,14 +17,20 @@ class PlayScene extends BaseScene {
         "A playful puppy wags its tail",
         "The puppy barks happily",
         "A gentle pat soothes the puppy",
+        "A smile on his face",
+        "Joy in his heart",
       ],
       medium: [
         "The curious puppy sniffs around and wags its tail",
         "With each pat, the puppy's joyous barks fill the air",
+        "Puppies and puddles, licks and hugs, soft and lovable",
+        "Paws that trip and stumble over everything on the floor",
+        "His gentle puppy paw, so warm and fuzzy.",
       ],
       hard: [
         "The energetic puppy leaps around, wagging its tail and seeking attention.",
         "Joyful barks echo as the puppy excitedly jumps, seeking gentle pats and tickles.",
+        "Once there was an adorable puppy, with a happy tongue and a burst of excitement.",
       ],
     };
 
