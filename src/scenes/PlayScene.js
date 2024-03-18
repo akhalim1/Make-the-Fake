@@ -265,20 +265,24 @@ class PlayScene extends BaseScene {
   startNextRound() {
     this.movePuppyAcross();
     let sentence;
+    let timeLimit = 30;
     if (this.currentRoundIndex < this.maxRounds) {
       //console.log("Round starting.");
 
       if (this.currentRoundIndex < 2) {
         sentence = this.getRandomSentence(this.sentencePool.easy);
+        timeLimit = 35000;
       } else if (this.currentRoundIndex < 4) {
         sentence = this.getRandomSentence(this.sentencePool.medium);
+        timeLimit = 30000;
       } else {
         sentence = this.getRandomSentence(this.sentencePool.hard);
+        timeLimit = 20000;
       }
 
       this.currentRound = new Round(
         sentence,
-        30000,
+        timeLimit,
         this.completeRound.bind(this),
         this.failRound.bind(this),
         this
@@ -326,7 +330,8 @@ class PlayScene extends BaseScene {
       this.sentenceText = this.add
         .bitmapText(this.config.width / 2, 100, "copyduck", sentence, 30)
         .setMaxWidth(this.config.width - 40)
-        .setOrigin(0.5);
+        .setOrigin(0.5)
+        .setTint(0xff00ff);
     } else {
       this.sentenceText.setText(sentence);
     }
