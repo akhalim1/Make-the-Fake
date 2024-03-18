@@ -4,7 +4,7 @@ Phaser Major Components:
 - Text Object (bitmapText)
 - Animation Manager (Puppy)
 - Tween Manager (Clicker)
-- Timers (Sentence Timer)
+- Cameras (Fade Transition)
 */
 "use strict";
 

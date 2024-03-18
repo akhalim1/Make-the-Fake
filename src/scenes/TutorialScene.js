@@ -2,7 +2,7 @@ class TutorialScene extends BaseScene {
   constructor(config) {
     super("TutorialScene", { ...config, canGoBack: true });
   }
-  
+
   create() {
     super.create();
 
@@ -19,6 +19,6 @@ class TutorialScene extends BaseScene {
       )
       .setOrigin(0.5)
       .setMaxWidth(this.config.width - 40)
-      .setTint(0xff0000);
+      .setTint(0x000000);
   }
 }

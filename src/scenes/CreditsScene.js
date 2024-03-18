@@ -6,7 +6,7 @@ class CreditsScene extends BaseScene {
   create() {
     super.create();
 
-    const creditsText = "Credits - ???";
+    const creditsText = "copyduck Text - khurasanstudio";
 
     this.add
       .bitmapText(
@@ -18,6 +18,6 @@ class CreditsScene extends BaseScene {
       )
       .setOrigin(0.5)
       .setMaxWidth(this.config.width - 40)
-      .setTint(0xff0000);
+      .setTint(0x000000);
   }
 }
