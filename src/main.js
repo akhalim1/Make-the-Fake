@@ -5,6 +5,10 @@ Phaser Major Components:
 - Animation Manager (Puppy)
 - Tween Manager (Clicker)
 - Cameras (Fade Transition)
+
+SFX Source/Credit Links
+Puppy Barking Noise: https://www.youtube.com/watch?v=paElvuhbxIg
+Ouch SFX: https://www.youtube.com/watch?v=mNuUV2nN9kE
 */
 "use strict";
 
