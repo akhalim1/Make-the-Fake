@@ -156,6 +156,8 @@ class PlayScene extends BaseScene {
   loseHeart() {
     if (this.victory) return;
     this.sound.play("ouch", { volume: 0.5 });
+
+    // Start removing filled hearts from the right
     let filledHeartIndex = -1;
     for (let i = this.hearts.length - 1; i >= 0; i--) {
       if (this.hearts[i].texture.key === "filledHeart") {
@@ -163,9 +165,11 @@ class PlayScene extends BaseScene {
         break;
       }
     }
+
     if (filledHeartIndex !== -1) {
       this.hearts[filledHeartIndex].setTexture("heart");
     } else {
+      // Remove unfilled hearts
       if (this.hearts.length > 0) {
         const heartToRemove = this.hearts.pop();
         heartToRemove.destroy();
@@ -211,9 +215,6 @@ class PlayScene extends BaseScene {
       null,
       this
     );
-
-    // Reset the clicker position
-    this.time.delayedCall(1000, () => {});
   }
 
   resetClickerPosition() {
@@ -232,43 +233,6 @@ class PlayScene extends BaseScene {
         this.barkPlayed = false;
       },
     });
-  }
-
-  handleKeyInput(event) {
-    const excludedKeys = [
-      "ArrowUp",
-      "ArrowDown",
-      "ArrowLeft",
-      "ArrowRight",
-      "Shift",
-    ];
-
-    // Check if the key is not one of the excluded keys
-    if (!excludedKeys.includes(event.key)) {
-      if (this.currentRound) {
-        const currentSentence = this.currentRound.sentence;
-
-        // Key Matching
-        if (
-          // case sensitivity
-          event.key.toLowerCase() ===
-          currentSentence.charAt(this.sentenceProgress).toLowerCase()
-        ) {
-          // add invisible hitbox, if the clicker touches that instead then the heart is lost.
-          this.tickPuppy();
-          this.sentenceProgress++;
-          this.updateTextProgress();
-
-          // If the entire sentence has been correctly typed
-          if (this.sentenceProgress >= currentSentence.length) {
-            //console.log("Sentence completed
-            this.completeRound();
-          }
-        } else {
-          this.loseHeart();
-        }
-      }
-    }
   }
 
   startNextRound() {
@@ -305,10 +269,6 @@ class PlayScene extends BaseScene {
     }
   }
 
-  getRandomSentence(sentenceArray) {
-    return sentenceArray[Math.floor(Math.random() * sentenceArray.length)];
-  }
-
   completeRound() {
     this.sound.play("complete", { volume: 0.5 });
     this.fillHeart();
@@ -328,11 +288,14 @@ class PlayScene extends BaseScene {
 
   failRound() {
     //console.log("Failed round.");
-
     console.log(this.currentRound.completed);
     if (!this.victory && !this.currentRound.completed) {
       this.startScene("GameOverScene");
     }
+  }
+
+  getRandomSentence(sentenceArray) {
+    return sentenceArray[Math.floor(Math.random() * sentenceArray.length)];
   }
 
   displaySentence(sentence) {
@@ -419,13 +382,6 @@ class PlayScene extends BaseScene {
     this.time.delayedCall(1000, movePuppy);
   }
 
-  handleInvisibleCollision(clicker, box) {
-    if (!this.isClickerMoving) {
-      this.loseHeart();
-      this.isClickerMoving = true;
-    }
-  }
-
   resetGame() {
     this.scene.restart();
   }
@@ -437,5 +393,49 @@ class PlayScene extends BaseScene {
 
   addTimerID(id) {
     this.timerIDs.push(id);
+  }
+
+  handleInvisibleCollision(clicker, box) {
+    if (!this.isClickerMoving) {
+      this.loseHeart();
+      this.isClickerMoving = true;
+    }
+  }
+
+  handleKeyInput(event) {
+    const excludedKeys = [
+      "ArrowUp",
+      "ArrowDown",
+      "ArrowLeft",
+      "ArrowRight",
+      "Shift",
+    ];
+
+    // Check if the key is not one of the excluded keys
+    if (!excludedKeys.includes(event.key)) {
+      if (this.currentRound) {
+        const currentSentence = this.currentRound.sentence;
+
+        // Key Matching
+        if (
+          // case sensitivity
+          event.key.toLowerCase() ===
+          currentSentence.charAt(this.sentenceProgress).toLowerCase()
+        ) {
+          // add invisible hitbox, if the clicker touches that instead then the heart is lost.
+          this.tickPuppy();
+          this.sentenceProgress++;
+          this.updateTextProgress();
+
+          // If the entire sentence has been correctly typed
+          if (this.sentenceProgress >= currentSentence.length) {
+            //console.log("Sentence completed
+            this.completeRound();
+          }
+        } else {
+          this.loseHeart();
+        }
+      }
+    }
   }
 }
